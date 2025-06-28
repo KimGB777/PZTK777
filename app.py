@@ -9,7 +9,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     page_icon="⚔️"
 )
-
+st.markdown("**라스트워:서바이벌 PZTK #777 연맹 홈페이지** | @고체RHCP")
+s
 # KST 시간대
 KST = timezone(timedelta(hours=9))
 def get_kst_now():
@@ -46,3 +47,17 @@ elif page == r4page_name:
 else:
     from pages.Dashboard import render as render_dashboard
     render_dashboard()
+    
+    
+# 푸터
+st.divider()
+st.markdown(
+    f"""
+    <div style='text-align: center; color: #666; font-size: 12px; margin: 20px 0;'>
+        🎮 LAST WAR:SURVIVAL PZTK #777 연맹 대시보드 v3.0<br>
+        Madeby @고체RHCP | Powered by Streamlit<br>
+        최종 업데이트: {kst_now.strftime('%Y-%m-%d %H:%M:%S KST')}
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
