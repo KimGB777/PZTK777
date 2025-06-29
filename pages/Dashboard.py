@@ -3,6 +3,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta, timezone
+from utils.gsheet_loader import logad_gsheet_data
 from utils.data_loader import load_event_data
 from utils.data_extract import extract_section, format_content_display
 from components.copy_button import render_copy_button
