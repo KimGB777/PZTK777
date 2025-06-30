@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from utils.data_loader import load_event_data
 from utils.data_extract import extract_section, format_content_display
 from components.copy_button import render_copy_button
+DATA_FILE = "data/data_250630.xlsx"
 
 # KST 시간대 정의
 KST = timezone(timedelta(hours=9))
@@ -20,9 +21,9 @@ def render():
     kst_now = get_kst_now()
     default_day = (kst_now - timedelta(days=1)).date() if kst_now.hour < 11 else kst_now.date()
 
-    with st.info("📅 일자 선택 (한국 시간 11:00~익일 11:00)"):
+    with st.info("📅 일자 선택"):
         game_day = st.date_input(
-            label="날짜 입력 (한국 시간 11:00~익일11:00 이후를 당일로 간주합니)",
+            label="날짜 입력 (한국 시간 11:00~익일11:00 )",
             value=default_day,
             help="한국 시간으로 11:00 이후를 당일로 간주합니다."
         )
@@ -30,7 +31,6 @@ def render():
     # ─────────────────────────────────────────────────────────────────────────
     # 데이터 로드 및 필터링
     # ─────────────────────────────────────────────────────────────────────────
-    DATA_FILE = "data/data_250628_test.xlsx"
     daily_df, weekly_df, monthly_df, note_df = load_event_data(DATA_FILE)
 
     wd = game_day.isoweekday()
