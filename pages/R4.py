@@ -3,7 +3,51 @@ import streamlit as st
 import pandas as pd
 import gspread, json, os
 from google.oauth2.service_account import Credentials
+import streamlit as st
+import hashlib
+import secrets
+from functools import wraps
 
+def hash_password(password: str, salt: str) -> str:
+    """패스워드 해싱"""
+    return hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 100000).hex()
+
+def verify_password(password: str, hashed: str, salt: str) -> bool:
+    """패스워드 검증"""
+    return hash_password(password, salt) == hashed
+
+def require_auth(func):
+    """인증 데코레이터"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not st.session_state.get('authenticated', False):
+            st.error("🔒 관리자 권한이 필요합니다.")
+            
+            password = st.text_input("관리자 비밀번호", type="password", key="auth_password")
+            if st.button("로그인"):
+                # 실제 환경에서는 해시된 패스워드와 비교
+                stored_hash = st.secrets.get("R4_PASSWORD_HASH", "")
+                salt = st.secrets.get("R4_SALT", "")
+                
+                if stored_hash and verify_password(password, stored_hash, salt):
+                    st.session_state.authenticated = True
+                    st.session_state.auth_timestamp = time.time()
+                    st.rerun()
+                else:
+                    st.error("❌ 잘못된 비밀번호입니다.")
+            return
+        
+        # 세션 타임아웃 검사 (30분)
+        if time.time() - st.session_state.get('auth_timestamp', 0) > 1800:
+            st.session_state.authenticated = False
+            st.error("🕐 세션이 만료되었습니다. 다시 로그인해주세요.")
+            st.rerun()
+            return
+            
+        return func(*args, **kwargs)
+    return wrapper
+
+@require_auth
 def render() -> None:
     st.title("⚙️ R4 참고 (Spreadsheet 편집)")
 

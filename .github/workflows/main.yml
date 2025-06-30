@@ -1,13 +1,27 @@
-permissions: id-token: write
+# .github/workflows/main.yml
+permissions:
+  id-token: write     # OIDC 토큰 발급을 위해 필요
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
+      - name: 체크아웃 코드
+        uses: actions/checkout@v4
+
+      - name: GCP 인증 (Workload Identity Federation)
+        id: auth
+        uses: google-github-actions/auth@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
-      - run: gcloud run deploy pztk777-dashboard …
+
+      - name: Cloud Run 배포
+        run: |
+          gcloud run deploy pztk777-dashboard \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/pztk777-dashboard \
+            --region asia-northeast1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars=GSHEETS_URL=${{ secrets.GSHEETS_URL }},R4PW=${{ secrets.R4PW }}
