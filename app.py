@@ -10,7 +10,6 @@ st.set_page_config(
     page_icon="⚔️"
 )
 st.markdown("**라스트워:서바이벌 PZTK #777 연맹 홈페이지** | @고체RHCP")
-s
 # KST 시간대
 KST = timezone(timedelta(hours=9))
 def get_kst_now():
