@@ -44,26 +44,26 @@ streamlit run app.py
 ## 📁 프로젝트 구조
 
 ```
-PZTK777/
-├── app.py                 # 메인 애플리케이션
-├── requirements.txt       # 의존성 목록
-├── README.md             # 프로젝트 문서
+project/
 ├── .streamlit/
-│   ├── config.toml       # Streamlit 설정
-│   └── secrets.toml      # 비밀 설정 (Git 제외)
-├── pages/                # 페이지 모듈
-│   ├── Dashboard.py      # 대시보드 페이지
-│   ├── Calculator.py     # 계산기 페이지
-│   └── R4.py            # 관리자 페이지
-├── components/           # UI 컴포넌트
-│   └── copy_button.py    # 복사 버튼 컴포넌트
-├── utils/               # 유틸리티 함수
-│   ├── gsheet_loader.py  # Google Sheets 데이터 로더
-│   ├── data_extract.py   # 데이터 추출 함수
-│   └── logger.py         # 로깅 유틸리티
-├── tests/               # 테스트 파일
-└── .github/
-    └── workflows/        # GitHub Actions 워크플로우
+│   └── secrets.toml
+├── app.py
+├── pages/
+│   ├── Dashboard.py
+│   ├── Calculator.py
+│   └── R4.py
+├── components/
+│   └── copy_button.py
+├── utils/
+│   ├── data_loader.py
+│   └── data_extract.py
+├── scripts/
+│   └── generate_hash.py
+├── data/
+│   ├── calc_data.xlsx
+│   └── 250628_1800.xlsx
+└── requirements.txt
+
 ```
 
 ## 🔧 일정 수정 방법
