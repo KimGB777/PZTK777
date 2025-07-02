@@ -1,5 +1,5 @@
 # pages/Dashboard.py
-import streamlit as st
+import streamlit as st # type: ignore
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 from utils.data_extract import extract_section, format_content_display

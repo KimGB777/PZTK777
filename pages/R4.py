@@ -1,11 +1,11 @@
 # pages/R4.py
 
-import streamlit as st
+import streamlit as st # type: ignore
 import pandas as pd
 import hashlib
 import time
 import logging
-from streamlit_gsheets import GSheetsConnection
+from streamlit_gsheets import GSheetsConnection # type: ignore
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -96,7 +96,7 @@ def render():
     worksheet = st.selectbox(
         "편집할 워크시트 선택",
         options=["note", "daily", "weekly", "monthly"],
-        index=0
+        index=1
     )
 
     # 시트 로드
