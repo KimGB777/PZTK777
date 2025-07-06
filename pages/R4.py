@@ -5,6 +5,7 @@ import pandas as pd
 import hashlib
 import time
 import logging
+from datetime import datetime, timedelta, timezone
 from streamlit_gsheets import GSheetsConnection # type: ignore
 
 logging.basicConfig(level=logging.INFO)
@@ -40,7 +41,7 @@ def check_session_timeout(minutes: int = 30) -> bool:
 
 def render():
     """R4 관리 페이지 렌더링"""
-    st.set_page_config(page_title="⚙️ R4 관리", layout="wide")
+    st.set_page_config(page_title="⚙️ 일정관리 및 참고자료", layout="wide")
     st.title("⚙️ R4 관리 (Google Sheets 편집)")
 
     # 초기화
@@ -94,7 +95,7 @@ def render():
 
     # 워크시트 선택
     worksheet = st.selectbox(
-        "편집할 워크시트 선택",
+        "편집할 워크시트 선택(note=고정일정, daily=일일일정, weekly=매주반복, monthly=4주반복)",
         options=["note", "daily", "weekly", "monthly"],
         index=1
     )
@@ -106,6 +107,13 @@ def render():
         st.error(f"워크시트 로드 실패: {e}")
         logger.error(f"워크시트 '{worksheet}' 로드 오류: {e}")
         return
+    if worksheet == "daily" and "Date" in df.columns:
+        # 어제 날짜 계산
+        game_day = (datetime.now() - timedelta(days=1)).date()
+        # 날짜 컬럼을 datetime으로 변환
+        df["Date"] = pd.to_datetime(df["Date"]).dt.date
+        # game_day(-1day) 행 추출
+        mask = df["Date"] == game_day
 
     st.subheader(f"📋 '{worksheet}' 편집")
     # 데이터프레임 편집 UI
@@ -115,7 +123,6 @@ def render():
         use_container_width=True,
         key="gsheet_editor"
     )
-
     # 변경사항 저장
     if st.button("✅ 변경사항 저장"):
         try:

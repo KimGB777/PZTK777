@@ -6,13 +6,14 @@ import pandas as pd
 @st.cache_data(ttl=900)
 def load_calc_data() -> dict[str, pd.DataFrame]:
     """
-    Load all sheets from calc_data_250702.xlsx.
+    Load all sheets from calc_data_250706.xlsx.
     """
-    file_path = "data/calc_data_250702.xlsx"
+    file_path = "data/calc_data_250706.xlsx"
     sheet_map = {
         "hq":                 "hq_requirements",
         "bdg":                "bdg",
         "gear":               "gear",
+        "drone":              "drone",
         "hero_exp":           "hero_exp",
         "hero_skill":         "hero_skill",
         "hero_weapon":        "hero_weapon",
@@ -43,9 +44,11 @@ def format_resource(val):
         x = float(val)
     except Exception:
         return str(val)
-    if abs(x) >= 1e6:
-        return f"{x/1e6:.3f} G"
-    elif abs(x) >= 1e4:
+    if abs(x) >= 1e9:
+        return f"{x/1e9:.3f} G"
+    elif abs(x) >= 1e6:
+        return f"{x/1e6:.1f} M"
+    elif abs(x) >= 1e3:
         return f"{x/1e3:.1f} k"
     else:
         return f"{int(x):,}"
@@ -58,6 +61,7 @@ def render(_load_sheet):
         "🏰 본부 업그레이드 조건": ("hq",   "hq_lvl",                    []),
         "🏗️ 건물 자원/시간":       ("bdg",  "bdg_lvl",                  []),
         "⚙️ 장비 제작":            ("gear", "Gear_names",              ["coins","ores","ceramics","yellow_blueprint","red_blueprint"]),
+        "🚁 드론 업그레이드":       ("drone", "drone_level",             ["drone_parts"]),
         "영웅 경험치":            ("hero_exp",          "hero_lvl",            ["hero_exp"]),
         "영웅 스킬훈장":          ("hero_skill",        "hero_skill_lvl",      ["hero_skill_medal"]),
         "영웅 전속무기":          ("hero_weapon",       "hero_weapon_lvl",     ["hero_weapon_shard"]),
@@ -112,7 +116,7 @@ def render(_load_sheet):
             return f"{days}일 {hours}시간 {minutes}분"
 
         min0 = parse_time(days, hms)
-        min1 = min0 / (1 + time_buff * 0.01)
+        min1 = min0 / (time_buff * 0.01)
         iron_buff = row['Iron'] * (1 - rss_buff * 0.01)
         food_buff = row['Food'] * (1 - rss_buff * 0.01)
         coins_buff = row['Coins'] * (1 - rss_buff * 0.01)
@@ -167,5 +171,3 @@ def render(_load_sheet):
         sum_curr = df.loc[mask_curr,  col].astype(float).sum()
         need     = sum_tgt - sum_curr
         st.metric(col.replace("_"," ").title(), format_resource(need))
-
-

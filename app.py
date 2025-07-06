@@ -49,9 +49,11 @@ def load_sheet(worksheet: str) -> pd.DataFrame:
 # 헤더
 kst_now = get_kst_now()
 st.title("⚔️ LAST WAR:SURVIVAL PZTK #777")
-st.markdown("**라스트워:서바이벌 PZTK #777 연맹 홈페이지** | @고체RHCP")
-
+st.markdown("**라스트워:서바이벌 PZTK #777 연맹 홈페이지** ")
+st.markdown("아직 문제가 많습니다.")
+st.markdown("이용 중 문제가 있거나, 원하시는 기능이 있으시면 고체에게 알려주세요.")
 col1, col2 = st.columns(2)
+
 with col1:
     st.info(f"🕐 한국시간: {kst_now:%Y-%m-%d %H:%M:%S}")
 with col2:
